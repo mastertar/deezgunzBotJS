@@ -1,7 +1,16 @@
+const fs = require('fs');
 const { count } = require('console');
 const { sign } = require('crypto');
 const Discord = require('discord.js');
- const client = new Discord.Client();
+const client = new Discord.Client();
+client.commands = new Discord.Collection();
+
+const commandFiles = fs.readdirSync().filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+  const command = require(`./${file}`);
+  client.commands.set(command.name, command);
+}
 
 client.on('ready', () => {
  console.log(`Logged in as ${client.user.tag}!`);
@@ -10,6 +19,15 @@ client.on('ready', () => {
 
 client.on('message', msg => {
 
+	if (!client.commands.has(command)) return;
+
+	try {
+		client.commands.get(command).execute(message, args);
+	} catch (error) {
+		console.error(error);
+		message.reply('there was an error trying to execute that command!');
+	}
+	
   //Ping Command 
   if (msg.content === 'd.ping' || msg.content === 'D.ping') {
     msg.reply(`This bot's ping is ${client.ws.ping}ms`);
