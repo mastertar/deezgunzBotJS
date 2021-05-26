@@ -455,4 +455,4 @@ msg.channel.send('Ok');
 });
  
  
- client.login('Nzc2NTIyODMyNjQ4ODYzNzc1.X62HPg.9d6PvZ3WftDlQTX97OC4XPHc9t0');
+ client.login('token');
